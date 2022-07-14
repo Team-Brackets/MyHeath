@@ -18,8 +18,8 @@ function HomePage() {
   const navigate = useNavigate();
   return (
     <>
+      <Navbar />
       <div className="container home-page">
-        <Navbar />
         <div className="top-section">
           <div className="row mt-5">
             <div className="col-sm-6 col-md-6 col-lg-6">

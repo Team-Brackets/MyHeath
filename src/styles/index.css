@@ -1,6 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400&family=Syne:wght@400;700&display=swap');
+
 body {
   margin: 0;
-  font-family: 'Merriweather';
+  font-family: 'Merriweather', serif;
+  font-family: 'Syne', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
