@@ -93,7 +93,7 @@ function Dashboard() {
                   <div>
                     <div
                       className={`d-flex align-items-center justify-content-center ${
-                        data.type == "renew"
+                        data.type === "renew"
                           ? " bg-white text-dark"
                           : "bg-danger text-white"
                       }`}

@@ -1,4 +1,3 @@
-import axios from "axios";
 import React from "react";
 import Header from "../../components/navbars/header";
 import Sidebar from "../../components/navbars/sidebar";

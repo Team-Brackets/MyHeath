@@ -1,6 +1,6 @@
 import React from "react";
 import Navbar from "../components/navbars/navbar";
-import { ALT } from "../constants";
+import { ALT, user_client } from "../constants";
 import { health_plans } from "../dummy";
 
 import LIST_ONE from "../assets/icons/list-1.png";
@@ -12,8 +12,10 @@ import HEADER_IMAGE from "../assets/family.png";
 import Footer from "../components/footer";
 import GetInTouch from "../components/getInTouch";
 import Whyus from "../components/Whyus";
+import { useNavigate } from "react-router-dom";
 
 function HomePage() {
+  const navigate = useNavigate();
   return (
     <>
       <div className="container home-page">
@@ -30,7 +32,14 @@ function HomePage() {
                 We offer the best services that are affordable. You don’t have
                 to break your bank in order to have quality life insurance.
               </p>
-              <button className="btn btn-border px-5">Get Started</button>
+              <button
+                className="btn btn-border px-5"
+                onClick={() =>
+                  navigate(user_client ? "/dashboard" : "/auth-page")
+                }
+              >
+                Get Started
+              </button>
             </div>
             <div className="col-sm-6 col-md-6 col-lg-6 top-image">
               <img src={HEADER_IMAGE} alt={ALT} width="100%" />

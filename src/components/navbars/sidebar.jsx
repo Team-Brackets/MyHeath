@@ -1,15 +1,33 @@
-import React from 'react'
-import { ALT } from '../../constants'
+import React from "react";
+import { getAuth, signOut } from "firebase/auth";
 
-import USER_ICON from '../../assets/icons/user.png';
-import LOCK_ICON from '../../assets/icons/lock-password.png';
-import HELP_ICON from '../../assets/icons/help.png';
-import LIST_ICON from '../../assets/icons/list.png';
-import LOGOUT_ICON from '../../assets/icons/log-out.png';
-import HEALTH_ICON from '../../assets/icons/health.png';
-import { Link } from 'react-router-dom';
+import { ALT } from "../../constants";
+
+import USER_ICON from "../../assets/icons/user.png";
+import LOCK_ICON from "../../assets/icons/lock-password.png";
+import HELP_ICON from "../../assets/icons/help.png";
+import LIST_ICON from "../../assets/icons/list.png";
+import LOGOUT_ICON from "../../assets/icons/log-out.png";
+import HEALTH_ICON from "../../assets/icons/health.png";
+import { Link, useNavigate } from "react-router-dom";
+
+import initializeAuthentication from "../../firebase";
 
 function Sidebar() {
+  const navigate = useNavigate();
+
+  initializeAuthentication();
+  const logoutHandler = () => {
+    const auth = getAuth();
+    signOut(auth)
+      .then(() => {
+        localStorage.clear();
+        navigate("/");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   return (
     <div className="sidebar">
       <ul>
@@ -53,17 +71,20 @@ function Sidebar() {
             </div>
           </Link>
         </li>
-        <li style={{ marginTop: '35vh' }}>
-          <Link to="#">
+        <li
+          style={{ marginTop: "35vh", cursor: "pointer" }}
+          onClick={logoutHandler}
+        >
+          <>
             <div>
               <img src={LOGOUT_ICON} alt={ALT} />
-              <span style={{ color: '#FD1313' }}>Logut</span>
+              <span style={{ color: "#FD1313" }}>Logut</span>
             </div>
-          </Link>
+          </>
         </li>
       </ul>
     </div>
-  )
+  );
 }
 
-export default Sidebar
+export default Sidebar;

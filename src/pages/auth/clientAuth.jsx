@@ -9,6 +9,8 @@ import {
   sendSignInLinkToEmail,
   isSignInWithEmailLink,
   signInWithEmailLink,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
 } from "firebase/auth";
 import initializeAuthentication from "../../firebase";
 import { useNavigate } from "react-router-dom";
@@ -22,32 +24,27 @@ export function ClientLoginAuth() {
 
   const navigate = useNavigate();
 
-  const actionCodeSettings = {
-    url: "https://my-health.vercel.app/auth/sign-up",
-    // This must be true.
-    handleCodeInApp: true,
-    rewrites: [
-      {
-        source: "/**", // Dynamic Links start with "https://links.example.com/"
-        dynamicLinks: true,
-      },
-    ],
-  };
-  const userMail = userDetails.email;
-
   initializeAuthentication();
   const submitHandler = (e) => {
     e.preventDefault();
+    initializeAuthentication();
     const auth = getAuth();
-    sendSignInLinkToEmail(auth, userMail, actionCodeSettings)
-      .then(() => {
-        window.localStorage.setItem("emailForSignIn", userMail);
-        navigate("/dashboard");
+    signInWithEmailAndPassword(auth, userDetails.email, userDetails.password)
+      .then((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+        localStorage.setItem("emailForSignIn", user.email);
+        if (user.accessToken) {
+          setTimeout(() => {
+            navigate("/dashboard");
+          }, 2000);
+        }
+        console.log(user);
       })
       .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(error);
+        console.log(error.code);
+        console.log(error.message);
+        // ..
       });
   };
   return (
@@ -128,10 +125,13 @@ export function ClientSignUpAuth() {
     identification_image: "",
     preferred_hospital: "",
   });
+  const [password, setPassword] = React.useState("");
+  const [confirmPassword, setConfirmPassword] = React.useState("");
+
   const navigate = useNavigate();
 
   const actionCodeSettings = {
-    url: "https://my-health.vercel.app/auth/sign-up",
+    url: "https://myhealth-91b4e.firebaseapp.com/auth/sign-up",
     // This must be true.
     handleCodeInApp: true,
     rewrites: [
@@ -154,16 +154,39 @@ export function ClientSignUpAuth() {
     );
     if (res) {
       const auth = getAuth();
-      sendSignInLinkToEmail(auth, userMail, actionCodeSettings)
-        .then(() => {
-          window.localStorage.setItem("emailForSignIn", userMail);
-          setRes(true);
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          console.log(error);
-        });
+      // sendSignInLinkToEmail(auth, userMail, actionCodeSettings)
+      //   .then(() => {
+      //     window.localStorage.setItem("emailForSignIn", userMail);
+      //     setRes(true);
+      //   })
+      //   .catch((error) => {
+      //     const errorCode = error.code;
+      //     const errorMessage = error.message;
+      //     console.log(error);
+      //   });
+
+      if (password === confirmPassword) {
+        createUserWithEmailAndPassword(auth, userMail, password)
+          .then((userCredential) => {
+            // Signed in
+
+            const user = userCredential.user;
+            localStorage.setItem("emailForSignIn", user.email);
+            if (user.access) {
+              setTimeout(() => {
+                navigate("/dashboard");
+              }, 2000);
+            }
+            console.log(user);
+          })
+          .catch((error) => {
+            console.log(error.code);
+            console.log(error.message);
+            // ..
+          });
+      } else {
+        console.log("password not correct");
+      }
     }
   };
 
@@ -216,7 +239,6 @@ export function ClientSignUpAuth() {
         </div>
       </div>
       <form onSubmit={submitHandler}>
-        {" "}
         {!movementSecond && !movementThird && (
           <div>
             <div className="mb-3">
@@ -466,6 +488,32 @@ export function ClientSignUpAuth() {
                   <option value="Peace Hospital">Peace Hospital</option>
                   <option value="Asa dam Hospital">Asa-dam Hospital</option>
                 </select>
+              </div>
+              <div className="mb-3">
+                <label for="password" className="form-label">
+                  Password:
+                </label>
+                <input
+                  type="password"
+                  className="form-control"
+                  id="password"
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                  }}
+                />
+              </div>
+              <div className="mb-3">
+                <label for="confirmPassword" className="form-label">
+                  Confirm Password
+                </label>
+                <input
+                  type="password"
+                  className="form-control"
+                  id="confirmPassword"
+                  onChange={(e) => {
+                    setConfirmPassword(e.target.value);
+                  }}
+                />
               </div>
             </div>
             <div className="text-center mt-4">

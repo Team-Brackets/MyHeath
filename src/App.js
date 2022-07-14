@@ -20,7 +20,7 @@ function App() {
     <Route path="/auth-page" element={user ? <Navigate to="/dashboard" /> : <AuthPage />} />
     <Route path="/auth/login" element={user ? <Navigate to="/dashboard" /> : <ClientLoginAuth />} />
     <Route path="/auth/sign-up" element={user ? <Navigate to="/dashboard" /> : <ClientSignUpAuth />} />
-    <Route path="/dashbaord" element={!user ? <Navigate to="/" /> : <Dashboard />} />
+    <Route path="/dashboard" element={!user ? <Navigate to="/" /> : <Dashboard />} />
     <Route path="/profile" element={!user ? <Navigate to="/" /> : <Profile />} />
     <Route path="/my-health-plans" element={<Healthplans />} />
     <Route path="/my-payment-records" element={<PaymentRecords />} />
